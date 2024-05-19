@@ -99,7 +99,7 @@ onMounted(() => {
 
       const content = quill.getText();
 
-      const regex = /(.*?)I pick you\s*/g;
+      const regex = /(.*?)I pick you\s*/gi;
       const match = regex.exec(content);
       if (!match) {
         return;
