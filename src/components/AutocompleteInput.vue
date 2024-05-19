@@ -11,6 +11,11 @@ onMounted(() => {
       toolbar: false,
       keyboard: {
         bindings: {
+          shift_enter: {
+            key: 'Enter',
+            shiftKey: true,
+            handler: () => false,
+          },
           enter: {
             key: 'Enter',
             handler: () => false,
