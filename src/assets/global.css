@@ -1,0 +1,100 @@
+@font-face {
+  font-family: 'GT America';
+  font-weight: 100;
+  font-display: auto;
+  src:
+    local('GT America'),
+    url(/fonts/GTAmerica/GT-America-Thin.otf) format('opentype');
+}
+
+@font-face {
+  font-family: 'GT America';
+  font-weight: 300;
+  font-display: auto;
+  src:
+    local('GT America'),
+    url(/fonts/GTAmerica/GT-America-Light.otf) format('opentype');
+}
+
+@font-face {
+  font-family: 'GT America';
+  font-weight: 400;
+  font-display: auto;
+  src:
+    local('GT America'),
+    url(/fonts/GTAmerica/GT-America-Regular.otf) format('opentype');
+}
+
+@font-face {
+  font-family: 'GT America';
+  font-weight: 600;
+  font-display: auto;
+  src:
+    local('GT America'),
+    url(/fonts/GTAmerica/GT-America-Medium.otf) format('opentype');
+}
+
+@font-face {
+  font-family: 'GT America';
+  font-weight: 700;
+  font-display: auto;
+  src:
+    local('GT America'),
+    url(/fonts/GTAmerica/GT-America-Bold.otf) format('opentype');
+}
+
+@font-face {
+  font-family: 'GT America';
+  font-weight: 900;
+  font-display: auto;
+  src:
+    local('GT America'),
+    url(/fonts/GTAmerica/GT-America-Black.otf) format('opentype');
+}
+
+:root {
+  --color-bg: #292827;
+  --color-black: #444;
+  --color-white: #f6f3ee;
+  --color-grey: #bbb2a1;
+  --color-blue: #4654dc;
+
+  --spacing: 4px;
+  --spacing-2x: 8px;
+  --spacing-3x: 12px;
+  --spacing-4x: 16px;
+  --spacing-5x: 20px;
+  --spacing-6x: 24px;
+  --spacing-7x: 28px;
+  --spacing-8x: 32px;
+
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.625rem;
+  --font-size-xl: 2rem;
+  --font-size-2xl: 2.5rem;
+
+  --shape-radius: 4px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  height: 100vh;
+  width: 100%;
+  margin: 0;
+  font-family: 'GT America', sans-serif;
+  background-color: var(--color-bg);
+  font-size: var(--font-size-md);
+}
+
+p {
+  margin: 0;
+}

@@ -1,13 +1,64 @@
+<script setup lang="ts">
+import { ref, watch } from 'vue';
+import './assets/global.css';
+import AutocompleteInput from './components/AutocompleteInput.vue';
+import AutocompleteSuggestionList from './components/AutocompleteSuggestionList.vue';
+import { CONFIG } from './config';
+import { closeSuggestions, openSuggestions, setItems, state } from './components/AutocompleteStore';
+
+const items = ref();
+
+type APIResponse = {
+  completions: Array<{ phrase: string; score: number }>;
+};
+
+watch(
+  () => [state.rawValue, state.queryValue],
+  async ([newValue, newQuery]) => {
+    if (!newValue || newValue === '\n' || !newQuery) {
+      items.value = [];
+      closeSuggestions();
+      return;
+    }
+
+    const uri = encodeURIComponent(newQuery.trim());
+    const urlCompletion = `${CONFIG.API_URL}/completion?query=${uri}`;
+
+    const response = await fetch(urlCompletion);
+    if (!response.ok) {
+      return;
+    }
+
+    const data: APIResponse = await response.json();
+    const mappedItems = data.completions.map((item) => item.phrase);
+    setItems(mappedItems);
+    openSuggestions();
+  },
+);
+</script>
+
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <h1>Hello, world</h1>
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
+  <main class="container">
+    <section class="container--editor">
+      <AutocompleteInput />
+      <AutocompleteSuggestionList />
+    </section>
   </main>
 </template>
+
+<style scoped>
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100vw;
+}
+
+.container--editor {
+  position: relative;
+  width: 80%;
+}
+</style>
