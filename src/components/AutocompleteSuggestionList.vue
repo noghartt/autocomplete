@@ -1,22 +1,10 @@
 <script setup lang="ts">
 import { ListboxRoot, ListboxContent, ListboxItem, ListboxVirtualizer } from 'radix-vue';
-import { computed, ref, watch } from 'vue';
+import { computed } from 'vue';
 
 import { closeSuggestions, state, updateSelectedValue } from './AutocompleteStore';
-
-export interface Props {
-  items: string[];
-}
-
-const selectedValue = ref<string | null>(state.selectedValue);
-watch(selectedValue, (newValue) => {
-  if (!newValue) {
-    updateSelectedValue('');
-    return;
-  }
-
-  updateSelectedValue(newValue);
-});
+import type { AcceptableValue } from 'node_modules/radix-vue/dist/shared/types';
+import type { SelectEvent } from 'node_modules/radix-vue/dist/Combobox/ComboboxItem';
 
 const showListbox = computed(() => state.items.length > 0 && state.isSuggestionsOpen);
 
@@ -37,12 +25,17 @@ const onKeyDown = (e: KeyboardEvent) => {
     methodPerKey[key]();
   }
 };
+
+const onSelect = async (e: SelectEvent<AcceptableValue>) => {
+  const value = e.detail.value as string;
+  updateSelectedValue(value);
+  closeSuggestions();
+};
 </script>
 
 <template>
   <ListboxRoot
     v-if="showListbox"
-    v-model="selectedValue"
     class="listbox--root"
     :class="{ 'listbox--root-open': state.isSuggestionsOpen }"
     selection-behavior="replace"
@@ -55,7 +48,7 @@ const onKeyDown = (e: KeyboardEvent) => {
         class="listbox--virtualizer"
         :estimate-size="35"
       >
-        <ListboxItem :key="option" :value="option" class="listbox--item">
+        <ListboxItem :key="option" :value="option" class="listbox--item" @select="onSelect">
           {{ option }}
         </ListboxItem>
       </ListboxVirtualizer>

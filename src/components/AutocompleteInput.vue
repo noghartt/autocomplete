@@ -24,7 +24,7 @@ onMounted(() => {
   quill.clipboard.onPaste = () => null;
 
   function stylizeTextOnChange(text: string) {
-    const regex = /(.*?)I pick you\s*/g;
+    const regex = /(.*?)I pick you\s*/gi;
     const match = regex.exec(text);
     if (!match) {
       return;
@@ -58,7 +58,7 @@ onMounted(() => {
       return;
     }
 
-    // quill.removeFormat(0, text.length - 1);
+    quill.removeFormat(0, text.length - 1);
     stylizeTextOnChange(text);
   });
 
@@ -93,6 +93,10 @@ onMounted(() => {
   watch(
     () => state.selectedValue,
     async (newValue) => {
+      if (!newValue) {
+        return;
+      }
+
       const content = quill.getText();
 
       const regex = /(.*?)I pick you\s*/g;
@@ -102,25 +106,14 @@ onMounted(() => {
       }
 
       const beforeText = match[1];
-      const lengthPick = match[0].length - beforeText.length;
-      const startIndexPick = match.index + beforeText.length;
-      const queryStartIndex = startIndexPick + lengthPick;
 
-      // replace the queryValue with the newValue on quil
-      // quill.deleteText(queryStartIndex, content.length - queryStartIndex, 'user');
-      // const d = quill.setText(`${content.slice(0, queryStartIndex)}${newValue}`, 'silent');
-      // quill.removeFormat(0, quill.getLength() - 1);
-      quill.insertText(queryStartIndex, 'abc', 'user');
+      quill.setContents([
+        { insert: beforeText, attributes: {} },
+        { insert: 'I pick you ', attributes: { color: 'var(--color-blue)' } },
+        { insert: newValue, attributes: { code: true } },
+      ]);
 
-      // console.log({ new: `${content.slice(0, queryStartIndex)}${newValue}` });
-
-      // const d = quill.setText(``, 'api');
-
-      console.log({
-        text: quill.getText(),
-        value: `${content.slice(0, queryStartIndex)}${newValue}`,
-      });
-
+      state.selectedValue = '';
       closeSuggestions();
     },
   );

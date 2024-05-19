@@ -15,6 +15,7 @@ type APIResponse = {
 watch(
   () => [state.rawValue, state.queryValue],
   async ([newValue, newQuery]) => {
+    setItems([]);
     if (!newValue || newValue === '\n' || !newQuery) {
       items.value = [];
       closeSuggestions();
@@ -32,7 +33,12 @@ watch(
     const data: APIResponse = await response.json();
     const mappedItems = data.completions.map((item) => item.phrase);
     setItems(mappedItems);
-    openSuggestions();
+
+    const hasPokemonInserted = mappedItems.find((item) => newValue.endsWith(item + '\n'));
+
+    if (!hasPokemonInserted) {
+      openSuggestions();
+    }
   },
 );
 </script>
