@@ -6,8 +6,6 @@ import { closeSuggestions, state, updateSelectedValue } from './AutocompleteStor
 import type { AcceptableValue } from 'node_modules/radix-vue/dist/shared/types';
 import type { SelectEvent } from 'node_modules/radix-vue/dist/Combobox/ComboboxItem';
 
-const showListbox = computed(() => state.items.length > 0 && state.isSuggestionsOpen);
-
 const onKeyDown = (e: KeyboardEvent) => {
   const key = e.key;
   const methodPerKey: Record<string, () => void> = {
@@ -31,6 +29,9 @@ const onSelect = async (e: SelectEvent<AcceptableValue>) => {
   updateSelectedValue(value);
   closeSuggestions();
 };
+
+const showListbox = computed(() => state.items.length > 0 && state.isSuggestionsOpen);
+const isTest = computed(() => process.env.NODE_ENV === 'test');
 </script>
 
 <template>
@@ -42,6 +43,7 @@ const onSelect = async (e: SelectEvent<AcceptableValue>) => {
   >
     <ListboxContent class="listbox--content" data-listbox-content :onkeydown="onKeyDown">
       <ListboxVirtualizer
+        v-if="!isTest"
         v-slot="{ option }"
         :options="state.items"
         :text-content="(opt) => opt"
@@ -52,6 +54,16 @@ const onSelect = async (e: SelectEvent<AcceptableValue>) => {
           {{ option }}
         </ListboxItem>
       </ListboxVirtualizer>
+      <ListboxItem
+        v-else
+        v-for="item in state.items"
+        :key="item"
+        :value="item"
+        class="listbox--item"
+        @select="onSelect"
+      >
+        {{ item }}
+      </ListboxItem>
     </ListboxContent>
   </ListboxRoot>
 </template>

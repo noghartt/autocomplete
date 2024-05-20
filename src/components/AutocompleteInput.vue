@@ -28,7 +28,16 @@ onMounted(() => {
   // TODO: Avoid the paste handler while not formatting the text
   quill.clipboard.onPaste = () => null;
 
-  function stylizeTextOnChange(text: string) {
+  quill.on(Quill.events.TEXT_CHANGE, async function (_, __, source) {
+    const text = quill.getText();
+    state.rawValue = text;
+
+    if (source !== 'user') {
+      return;
+    }
+
+    quill.removeFormat(0, text.length - 1);
+
     const regex = /(.*?)I pick you\s*/gi;
     const match = regex.exec(text);
     if (!match) {
@@ -53,18 +62,6 @@ onMounted(() => {
     state.queryValue = queryValue;
 
     quill.formatText(queryStartIndex, queryLength, 'code', true, 'silent');
-  }
-
-  quill.on(Quill.events.TEXT_CHANGE, async function (_, __, source) {
-    const text = quill.getText();
-    state.rawValue = text;
-
-    if (source !== 'user') {
-      return;
-    }
-
-    quill.removeFormat(0, text.length - 1);
-    stylizeTextOnChange(text);
   });
 
   quill.root.addEventListener('keydown', async (event) => {
@@ -103,7 +100,6 @@ onMounted(() => {
       }
 
       const content = quill.getText();
-
       const regex = /(.*?)I pick you\s*/gi;
       const match = regex.exec(content);
       if (!match) {
@@ -129,6 +125,7 @@ onMounted(() => {
   <div
     class="editor--root"
     :class="{ 'editor--root-suggestion-open': state.isSuggestionsOpen }"
+    data-testid="autocomplete-input"
   ></div>
 </template>
 
