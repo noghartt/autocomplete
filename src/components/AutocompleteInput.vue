@@ -1,32 +1,15 @@
 <script setup lang="ts">
-import { onMounted, nextTick, watch } from 'vue';
+import { nextTick, onMounted, watch } from 'vue';
 import Quill from 'quill';
 
 import { closeSuggestions, openSuggestions, state } from './AutocompleteStore';
+import { createQuillInstance } from '@/lib/quill';
 
 onMounted(() => {
-  const quill = new Quill('.editor--root', {
+  const quill = createQuillInstance({
     placeholder: 'What will you pick?',
-    modules: {
-      toolbar: false,
-      keyboard: {
-        bindings: {
-          shift_enter: {
-            key: 'Enter',
-            shiftKey: true,
-            handler: () => false,
-          },
-          enter: {
-            key: 'Enter',
-            handler: () => false,
-          },
-        },
-      },
-    },
+    config: { disablePaste: true },
   });
-
-  // TODO: Avoid the paste handler while not formatting the text
-  quill.clipboard.onPaste = () => null;
 
   quill.on(Quill.events.TEXT_CHANGE, async function (_, __, source) {
     const text = quill.getText();

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { watch } from 'vue';
+
 import './assets/global.css';
+import { CONFIG } from './config';
+
 import AutocompleteInput from './components/AutocompleteInput.vue';
 import AutocompleteSuggestionList from './components/AutocompleteSuggestionList.vue';
-import { CONFIG } from './config';
 import { closeSuggestions, openSuggestions, setItems, state } from './components/AutocompleteStore';
-
-const items = ref();
 
 type APIResponse = {
   completions: Array<{ phrase: string; score: number }>;
@@ -17,7 +17,6 @@ watch(
   async ([newValue, newQuery]) => {
     setItems([]);
     if (!newValue || newValue === '\n' || !newQuery) {
-      items.value = [];
       closeSuggestions();
       return;
     }
