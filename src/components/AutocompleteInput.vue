@@ -50,7 +50,7 @@ onMounted(() => {
   quill.root.addEventListener('keydown', async (event) => {
     await nextTick();
     const key = event.key;
-    const methodPerKey: Record<string, () => void> = {
+    const actionWhenPressedKey: Record<string, () => void> = {
       Escape: () => {
         closeSuggestions();
       },
@@ -69,9 +69,9 @@ onMounted(() => {
       },
     };
 
-    if (methodPerKey[key]) {
+    if (actionWhenPressedKey[key]) {
       event.preventDefault();
-      methodPerKey[key]();
+      actionWhenPressedKey[key]();
     }
   });
 
