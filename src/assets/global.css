@@ -55,6 +55,7 @@
 :root {
   --color-bg: #292827;
   --color-black: #444;
+  --color-black-opacity: rgba(68, 68, 68, 0.1);
   --color-white: #f6f3ee;
   --color-grey: #bbb2a1;
   --color-blue: #4654dc;

@@ -77,7 +77,7 @@ const isTest = computed(() => process.env.NODE_ENV === 'test');
   max-height: 184px;
   overflow-y: auto;
   width: 100%;
-  border-top: 1px solid rgba(68, 68, 68, 0.1);
+  border-top: 1px solid var(--color-black-opacity);
 }
 
 .listbox--root-open {
@@ -87,7 +87,7 @@ const isTest = computed(() => process.env.NODE_ENV === 'test');
 
 .listbox--item {
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--font-size-md);
   font-weight: 500;
   outline: none;
   width: 100%;

@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import { nextTick, onMounted, watch } from 'vue';
+import { nextTick, onMounted, ref, watch } from 'vue';
 import Quill from 'quill';
 
-import { closeSuggestions, openSuggestions, state } from './AutocompleteStore';
 import { createQuillInstance } from '@/lib/quill';
+
+import { closeSuggestions, openSuggestions, state } from './AutocompleteStore';
+import AutocompleteInputIcon from './AutocompleteInputIcon.vue';
+
+const hasSelected = ref(false);
 
 onMounted(() => {
   const quill = createQuillInstance({
@@ -12,6 +16,7 @@ onMounted(() => {
   });
 
   quill.on(Quill.events.TEXT_CHANGE, async function (_, __, source) {
+    hasSelected.value = false;
     const text = quill.getText();
     state.rawValue = text;
 
@@ -38,6 +43,7 @@ onMounted(() => {
 
     if (queryLength <= 0) {
       state.queryValue = '';
+      hasSelected.value = false;
       return;
     }
 
@@ -65,6 +71,7 @@ onMounted(() => {
           el.focus();
           el.scrollIntoView({ block: 'nearest' });
           el.dataset.highlighted = '';
+          hasSelected.value = false;
         }
       },
     };
@@ -98,6 +105,7 @@ onMounted(() => {
       ]);
 
       state.selectedValue = '';
+      hasSelected.value = true;
       closeSuggestions();
     },
   );
@@ -110,6 +118,7 @@ onMounted(() => {
     :class="{ 'editor--root-suggestion-open': state.isSuggestionsOpen }"
     data-testid="autocomplete-input"
   ></div>
+  <AutocompleteInputIcon :show="hasSelected" />
 </template>
 
 <style>
@@ -130,10 +139,10 @@ onMounted(() => {
   outline: none;
 
   & code {
-    color: #444444;
-    background-color: rgba(68, 68, 68, 0.1);
+    color: var(--color-black);
+    background-color: var(--color-black-opacity);
     font-family: 'GT America', sans-serif;
-    padding: 2px 8px;
+    padding: 2px var(--spacing-2x);
     font-weight: 500;
     border-radius: var(--shape-radius);
   }
